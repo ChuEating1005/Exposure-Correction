@@ -1,3 +1,6 @@
 __pycache__/
-data/
-snapshots/
+data/train_data
+data/result/*
+!data/result/comparison
+snapshots/*
+!snapshots/Epoch199.pth
