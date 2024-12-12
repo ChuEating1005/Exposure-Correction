@@ -29,11 +29,15 @@ zerodce_env/
 # Data
 data/train_data/
 data/result/*
+data/pyramid
 !data/result/comparison/
 
 # Model Checkpoints
 snapshots/*
 !snapshots/*Epoch199.pth
+!snapshots/laplacian/
+snapshots/laplacian/*
+!snapshots/laplacian/best
 
 # IDE
 .idea/
