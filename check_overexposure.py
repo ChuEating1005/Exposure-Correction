@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 import shutil
 
-def check_overexposure(image_path, brightness_threshold=0.6, highlight_threshold=0.85):
+def check_overexposure(image_path, brightness_threshold=0.85, highlight_threshold=0.85, shadow_threshold = 0.1, shadow_ratio_limit = 0.001):
     """
     Check if an image is overexposed
     
@@ -33,8 +33,16 @@ def check_overexposure(image_path, brightness_threshold=0.6, highlight_threshold
     total_pixels = value.size
     highlight_ratio = highlight_pixels / total_pixels
     
+    shadow_pixels = np.sum(value < 255 * shadow_threshold)
+    shadow_ratio = shadow_pixels / total_pixels
+    
     # Determine if the image is overexposed
-    is_overexposed = (avg_brightness > brightness_threshold) or (highlight_ratio > 0.1)
+    is_overexposed = ((avg_brightness > brightness_threshold) or (highlight_ratio > 0.1))
+    
+    if(shadow_ratio > shadow_ratio_limit):
+        is_overexposed = False
+    
+
     if is_overexposed:
         # Create target folder (if it doesn't exist)
         os.makedirs("data/overexposed", exist_ok=True)
@@ -46,6 +54,7 @@ def check_overexposure(image_path, brightness_threshold=0.6, highlight_threshold
     stats = {
         'average_brightness': avg_brightness,
         'highlight_ratio': highlight_ratio,
+        'shadow_ratio' : shadow_ratio,
         'is_overexposed': is_overexposed
     }
     
@@ -91,3 +100,5 @@ if __name__ == "__main__":
         print(f"\nOverexposed image: {image['path']}")
         print(f"Average brightness: {image['stats']['average_brightness']:.2%}")
         print(f"Highlight region ratio: {image['stats']['highlight_ratio']:.2%}")
+        print(f"Shadow region ratio: {image['stats']['shadow_ratio']:}")
+    
