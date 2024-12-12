@@ -89,7 +89,7 @@ if __name__ == '__main__':
 	parser.add_argument('--test_dir', type=str, default='data/test_data/Over',
 						help='directory containing test images')
 	parser.add_argument('--generator_path', type=str, 
-						default='snapshots/gan_generator_Epoch199.pth',
+						default='snapshots/weights_gan/gan_generator.pth',
 						help='path to trained generator weights')
 	args = parser.parse_args()
 

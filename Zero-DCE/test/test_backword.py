@@ -37,7 +37,7 @@ def lowlight(image_path, weight_col=5, weight_exp=10):
 	
 	DCE_net = model.enhance_net_nopool().cuda()
 	DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1])
-	DCE_net.load_state_dict(torch.load(f'snapshots/exp{weight_exp}_col{weight_col}_E06_Epoch199.pth'))
+	DCE_net.load_state_dict(torch.load(f'snapshots/weights_backword/exp{weight_exp}_col{weight_col}_E06_Epoch199.pth'))
 
 	start = time.time()
 	_,enhanced_image,_ = DCE_net(data_lowlight)
