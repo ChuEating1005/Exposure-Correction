@@ -13,8 +13,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
-import utils.dataloader
-import utils.Myloss
+import utils.dataloader as dataloader
+import utils.Myloss as Myloss
 import models.backword as model
 import numpy as np
 from torchvision import transforms
@@ -34,13 +34,19 @@ def weights_init(m):
 
 def train(config, weight_TV=200, weight_spa=1, weight_col=5, weight_exp=10):
 
-	os.environ['CUDA_VISIBLE_DEVICES']=str(config.device)
+	# os.environ['CUDA_VISIBLE_DEVICES']=str(config.device)
 
+	# DCE_net = model.enhance_net_nopool().cuda()
 	DCE_net = model.enhance_net_nopool().cuda()
-
+	
+	# Load pretrained weights before wrapping with DataParallel
+	if config.load_pretrain:
+	    DCE_net.load_state_dict(torch.load(config.pretrain_dir, map_location='cuda:0'))
+	
+	# Then wrap with DataParallel
+	DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1])
 	DCE_net.apply(weights_init)
-	if config.load_pretrain == True:
-	    DCE_net.load_state_dict(torch.load(config.pretrain_dir))
+	
 	train_dataset = dataloader.lowlight_loader(config.lowlight_images_path)		
 	
 	train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.train_batch_size, shuffle=True, num_workers=config.num_workers, pin_memory=True)
@@ -50,7 +56,7 @@ def train(config, weight_TV=200, weight_spa=1, weight_col=5, weight_exp=10):
 	L_color = Myloss.L_color()
 	L_spa = Myloss.L_spa()
 
-	L_exp = Myloss.L_exp(16,0.4)
+	L_exp = Myloss.L_exp(16,0.6)
 	L_TV = Myloss.L_TV()
 
 
@@ -89,7 +95,7 @@ def train(config, weight_TV=200, weight_spa=1, weight_col=5, weight_exp=10):
 				print(f'[Wexp: {weight_exp}, Wcol: {weight_col}] Loss at iteration {iteration+1}: {loss.item()}')
 				# print(f'    Loss_TV: {Loss_TV}, Loss_spa: {loss_spa}, Loss_col: {loss_col}, Loss_exp: {loss_exp}')
 		if ((epoch+1) % config.snapshot_iter) == 0:
-			torch.save(DCE_net.state_dict(), f'{config.snapshots_folder}/exp{weight_exp}_col{weight_col}_Epoch{str(epoch)}.pth') 				
+			torch.save(DCE_net.state_dict(), f'{config.snapshots_folder}/exp{weight_exp}_col{weight_col}_E06_Epoch{str(epoch)}.pth') 				
 
 
 
@@ -119,6 +125,6 @@ if __name__ == "__main__":
 	if not os.path.exists(config.snapshots_folder):
 		os.mkdir(config.snapshots_folder)
 
-	for weight_exp in range(10, 35, 5):
-		for weight_col in range(5, 25, 5):
-			train(config, weight_exp=weight_exp, weight_col=weight_col)
+	# for weight_exp in range(10, 35, 5):
+	# 	for weight_col in range(5, 25, 5):
+	train(config, weight_exp=10, weight_col=5)

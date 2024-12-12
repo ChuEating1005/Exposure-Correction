@@ -23,11 +23,10 @@ import time
 
 
  
-def lowlight(image_path):
-	os.environ['CUDA_VISIBLE_DEVICES']='0'
+def lowlight(image_path, weight_col=5, weight_exp=10):
+	# os.environ['CUDA_VISIBLE_DEVICES']='0'
+	
 	data_lowlight = Image.open(image_path)
-
- 
 
 	data_lowlight = (np.asarray(data_lowlight)/255.0)
 
@@ -35,33 +34,33 @@ def lowlight(image_path):
 	data_lowlight = torch.from_numpy(data_lowlight).float()
 	data_lowlight = data_lowlight.permute(2,0,1)
 	data_lowlight = data_lowlight.cuda().unsqueeze(0)
-
+	
 	DCE_net = model.enhance_net_nopool().cuda()
-	DCE_net.load_state_dict(torch.load('snapshots/exp10_col5_Epoch199.pth'))
+	DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1])
+	DCE_net.load_state_dict(torch.load(f'snapshots/exp{weight_exp}_col{weight_col}_E06_Epoch199.pth'))
+
 	start = time.time()
 	_,enhanced_image,_ = DCE_net(data_lowlight)
+	enhanced_image = torch.clamp(enhanced_image, 0, 1)
 
-	# end_time = (time.time() - start)
-	# print(end_time)
-	image_path = image_path.replace('test_data','result')
-	result_path = image_path
-	if not os.path.exists(image_path.replace('/'+image_path.split("/")[-1],'')):
-		os.makedirs(image_path.replace('/'+image_path.split("/")[-1],''))
-
+	filename = image_path.split('/')[-1]
+	result_path = f"data/result/test_weights2/exp{weight_exp}_col{weight_col}/"
+	if not os.path.exists(result_path):
+		os.makedirs(result_path)
+	result_path = result_path + filename
 	torchvision.utils.save_image(enhanced_image, result_path)
 
 if __name__ == '__main__':
 # test_images
 	with torch.no_grad():
 		filePath = 'data/test_data/Over/'
-
-
-		for file_name in filePath:
-			test_list = glob.glob(filePath+file_name+"/*") 
-			for image in test_list:
-				# image = image
-				print(image)
-				lowlight(image)
+		for weight_exp in range(10, 35, 5):
+			for weight_col in range(5, 25, 5):
+				for file_name in filePath:
+					test_list = glob.glob(filePath+file_name+"/*") 
+					for image in test_list:
+						print(f'Processing {image} with weight_col={weight_col}, weight_exp={weight_exp}')
+						lowlight(image, weight_col=weight_col, weight_exp=weight_exp)
 
 		
 

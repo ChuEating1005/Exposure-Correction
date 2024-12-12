@@ -12,9 +12,9 @@ import time
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
-import utils.dataloader
-import utils.Myloss
-import models.gan
+import utils.dataloader as dataloader
+import utils.Myloss as Myloss
+import models.gan as model_gan
 import models.backword as model
 import numpy as np
 from torchvision import transforms

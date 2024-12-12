@@ -13,8 +13,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
-import utils.dataloader
-import models.gan
+import utils.dataloader as dataloader
+import models.gan as model_gan
 import models.backword as model
 import numpy as np
 from torchvision import transforms
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 	parser.add_argument('--test_dir', type=str, default='data/test_data/Over',
 						help='directory containing test images')
 	parser.add_argument('--generator_path', type=str, 
-						default='snapshots/gan_generator_Epoch49.pth',
+						default='snapshots/gan_generator_Epoch199.pth',
 						help='path to trained generator weights')
 	args = parser.parse_args()
 
