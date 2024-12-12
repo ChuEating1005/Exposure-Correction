@@ -26,4 +26,4 @@ for img_path in img_paths:
             axes[i][j+1].set_title(f'w_exp: {w_exp}, w_col: {w_col}')
     
     plt.tight_layout()
-    plt.savefig(f'data/result/comparison/comp_backword_{image_name}')
+    plt.savefig(f'comparison/comp_backword_{image_name}')

@@ -30,4 +30,4 @@ for image_id in image_ids:
             axes[i][j+1].set_title(f'w_exp: {w_exp}, w_col: {w_col}')
     
     plt.tight_layout()
-    plt.savefig(f'data/result/comparison/comp_04_{image_id}.jpg')
+    plt.savefig(f'comparison/comp_04_{image_id}.jpg')
