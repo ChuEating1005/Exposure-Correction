@@ -29,6 +29,7 @@ zerodce_env/
 # Data
 data/train_data/
 data/result/*
+data/pyramid
 !data/result/comparison/
 
 # Model Checkpoints
