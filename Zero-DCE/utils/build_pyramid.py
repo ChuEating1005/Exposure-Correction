@@ -36,7 +36,7 @@ def buildPyramid(image, levels):
     return gaussianPyramid, laplacianPyramid
 
 img_dir = '../data/train_data/'
-pyramidLevel = 4
+pyramidLevel = 6
 
 image_list = glob.glob(img_dir + '*.jpg')
 for img_path in image_list:
@@ -49,7 +49,7 @@ for img_path in image_list:
 
     # Save images
     for i in range(pyramidLevel-1):
-        cv2.imwrite(f'../data/pyramid/{pyramidLevel}_level/{i}/{os.path.basename(img_path)}', lp[i])
-    cv2.imwrite(f'../data/pyramid/{pyramidLevel}_level/{pyramidLevel-1}/{os.path.basename(img_path)}', gp[pyramidLevel-1])
+        cv2.imwrite(f'../data/pyramid/{i}/{os.path.basename(img_path)}', lp[i])
+    cv2.imwrite(f'../data/pyramid/{pyramidLevel-1}/{os.path.basename(img_path)}', gp[pyramidLevel-1])
 
 print(f'Pyramid #{pyramidLevel} built!')

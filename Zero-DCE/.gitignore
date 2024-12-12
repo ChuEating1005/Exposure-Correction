@@ -35,6 +35,9 @@ data/pyramid
 # Model Checkpoints
 snapshots/*
 !snapshots/*Epoch199.pth
+!snapshots/laplacian/
+snapshots/laplacian/*
+!snapshots/laplacian/best
 
 # IDE
 .idea/
