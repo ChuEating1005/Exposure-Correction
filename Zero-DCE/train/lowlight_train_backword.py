@@ -21,12 +21,12 @@ from torchvision import transforms
 
 
 def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
-        m.weight.data.normal_(0.0, 0.02)
-    elif classname.find('BatchNorm') != -1:
-        m.weight.data.normal_(1.0, 0.02)
-        m.bias.data.fill_(0)
+	classname = m.__class__.__name__
+	if classname.find('Conv') != -1:
+		m.weight.data.normal_(0.0, 0.02)
+	elif classname.find('BatchNorm') != -1:
+		m.weight.data.normal_(1.0, 0.02)
+		m.bias.data.fill_(0)
 
 
 
@@ -38,13 +38,13 @@ def train(config, weight_TV=200, weight_spa=1, weight_col=5, weight_exp=10):
 
 	# DCE_net = model.enhance_net_nopool().cuda()
 	DCE_net = model.enhance_net_nopool().cuda()
-	
+
 	# Load pretrained weights before wrapping with DataParallel
 	if config.load_pretrain:
-	    DCE_net.load_state_dict(torch.load(config.pretrain_dir, map_location='cuda:0'))
-	
+		DCE_net.load_state_dict(torch.load(config.pretrain_dir, map_location='cuda:0'))
+
 	# Then wrap with DataParallel
-	DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1])
+
 	DCE_net.apply(weights_init)
 	
 	train_dataset = dataloader.lowlight_loader(config.lowlight_images_path)		
