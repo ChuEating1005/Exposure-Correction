@@ -34,7 +34,11 @@ data/pyramid
 
 # Model Checkpoints
 snapshots/*
-!snapshots/*Epoch199.pth
+!snapshots/ZeroDCE_origin.pth
+!snapshots/ZeroDCE_pretrain.pth   
+!snapshots/weights_backword/
+!snapshots/weights_gan/
+!snapshots/weights_fuse/
 !snapshots/laplacian/
 snapshots/laplacian/*
 !snapshots/laplacian/best
