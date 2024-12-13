@@ -57,6 +57,8 @@
   - Batch processing
 
 ## Environment
+> [!CAUTION]
+> We are using the following environment to develop this project.
 > - NVIDIA GeForce RTX 4090
 > - Ubuntu 24.04 LTS
 > - python = 3.7
