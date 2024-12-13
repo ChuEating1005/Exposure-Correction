@@ -1,5 +1,12 @@
 """
 Training code using Zero-DCE + Laplacian Pyramid
+
+Script example:
+    $ python train_laplacina.py --display_iter=50 --snapshot_iter=20 --device=0
+
+Note:
+    - If you want to train the model on multiple GPUs, uncomment the line 
+      with "# no parallel" and comment the line with "# parallel"
 """
 
 import torch
@@ -34,7 +41,7 @@ def weights_init(m):
 
 
 def train(config, W_col=5, W_exp=10, W_tv=200, W_spa=1):
-    os.environ['CUDA_VISIBLE_DEVICES']=str(config.device)
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(config.device)
 
     level = config.level
 
@@ -52,8 +59,8 @@ def train(config, W_col=5, W_exp=10, W_tv=200, W_spa=1):
     DCE_nets = []
     optimizers = []
     for i in range(level):
-        DCE_net = model.enhance_net_nopool().cuda()
-        # DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1])
+        DCE_net = model.enhance_net_nopool().cuda()  # Not parallel
+        # DCE_net = torch.nn.DataParallel(model.enhance_net_nopool(), device_ids=[0, 1])  # Parallel
         DCE_net.apply(weights_init)
         optimizer = torch.optim.Adam(DCE_net.parameters(), lr=config.lr, weight_decay=config.weight_decay)
         DCE_nets.append(DCE_net)
@@ -66,7 +73,6 @@ def train(config, W_col=5, W_exp=10, W_tv=200, W_spa=1):
             prev_output = None
             model_loss = []
             for i in range(level):  # Train each model
-                # print(f'Epoch: {epoch}, Iteration: {iteration}, Level: {i}')
                 DCE_net = DCE_nets[i]
                 optimizer = optimizers[i]
                 img_lowlight = img[i].cuda()
@@ -103,7 +109,7 @@ def train(config, W_col=5, W_exp=10, W_tv=200, W_spa=1):
 
         if ((epoch + 1) % config.snapshot_iter) == 0:
             for i in range(level):
-                torch.save(DCE_nets[i].state_dict(), f'{config.snapshots_folder}/{level}/{i+1}_E0{int(config.E/0.1)}_Epoch{str(epoch)}.pth')
+                torch.save(DCE_nets[i].state_dict(), f'{config.snapshots_folder}/laplacian/{level}_new/{i+1}_E0{int(config.E/0.1)}_Epoch{str(epoch)}.pth')
 
         # get execution time using minutes and seconds
         execution_time = (time.time() - start_time)
@@ -125,11 +131,11 @@ if __name__ == "__main__":
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--display_iter', type=int, default=10)
     parser.add_argument('--snapshot_iter', type=int, default=10)
-    parser.add_argument('--snapshots_folder', type=str, default="snapshots/")
+    parser.add_argument('--snapshots_folder', type=str, default="../snapshots/")
     parser.add_argument('--load_pretrain', type=bool, default= False)
-    parser.add_argument('--pretrain_dir', type=str, default= "snapshots/Epoch99.pth")
+    parser.add_argument('--pretrain_dir', type=str, default= "../snapshots/Epoch99.pth")
     parser.add_argument('--device', type=int, default=0)
-    parser.add_argument('--E', type=float, default=0.6)
+    parser.add_argument('--E', type=float, default=0.4)
     parser.add_argument('--level', type=int, default=4)
     
     config = parser.parse_args()

@@ -1,3 +1,8 @@
+"""
+The dataloader used for Laplacian only (since it need to load 
+multiple images for each training example)
+"""
+
 import os
 import sys
 
@@ -17,9 +22,7 @@ class lowlight_loader(data.Dataset):
 
 		self.train_list = []
 		for i in range(len([name for name in os.listdir(lowlight_images_path)])):
-			print(glob.glob(f'{lowlight_images_path}/{str(i)}/*.jpg'))
 			self.train_list.append(glob.glob(f'{lowlight_images_path}/{str(i)}/*.jpg'))
-		print(self.train_list)
 		self.train_list = list(map(list, zip(*self.train_list)))
 		
 		print("Total training examples:", len(self.train_list))

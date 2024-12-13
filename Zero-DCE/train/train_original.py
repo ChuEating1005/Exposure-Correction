@@ -7,10 +7,17 @@ import os
 import sys
 import argparse
 import time
-import dataloader, model, Myloss
 import numpy as np
 from torchvision import transforms
 import torch.nn.functional as F
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+import utils.laplacianDataloader as dataloader
+import utils.Myloss as Myloss
+import models.laplacian as model
 
 def weights_init(m):
     classname = m.__class__.__name__
@@ -22,7 +29,7 @@ def weights_init(m):
 
 
 def train(config, level):
-    # os.environ['CUDA_VISIBLE_DEVICES']=str(config.device)
+    os.environ['CUDA_VISIBLE_DEVICES']=str(config.device)
 
     train_dataset = dataloader.lowlight_loader(config.lowlight_images_path)
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.train_batch_size, 
@@ -38,8 +45,8 @@ def train(config, level):
     DCE_nets = []
     optimizers = []
     for i in range(level):
-        DCE_net = model.enhance_net_nopool()
-        DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1]).cuda()
+        DCE_net = model.enhance_net_nopool().cuda()
+        # DCE_net = torch.nn.DataParallel(DCE_net, device_ids=[0, 1]).cuda()
         DCE_net.apply(weights_init)
         optimizer = torch.optim.Adam(DCE_net.parameters(), lr=config.lr, weight_decay=config.weight_decay)
         DCE_nets.append(DCE_net)
@@ -89,7 +96,7 @@ def train(config, level):
 
         if ((epoch + 1) % config.snapshot_iter) == 0:
             for i in range(level):
-                torch.save(DCE_nets[i].state_dict(), f'{config.snapshots_folder}/{i+1}_Epoch{str(epoch)}_new.pth')
+                torch.save(DCE_nets[i].state_dict(), f'{config.snapshots_folder}/2_original/{i+1}_Epoch{str(epoch)}.pth')
 
         # get execution time using minutes and seconds
         execution_time = (time.time() - start_time)
@@ -101,7 +108,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
 	# Input Parameters
-    parser.add_argument('--lowlight_images_path', type=str, default="data/pyramid")
+    parser.add_argument('--lowlight_images_path', type=str, default="../data/pyramid")
     parser.add_argument('--lr', type=float, default=0.0001)
     parser.add_argument('--weight_decay', type=float, default=0.0001)
     parser.add_argument('--grad_clip_norm', type=float, default=0.1)
@@ -121,4 +128,4 @@ if __name__ == "__main__":
     if not os.path.exists(config.snapshots_folder):
         os.mkdir(config.snapshots_folder)
 
-    train(config, level=4)
+    train(config, level=2)
