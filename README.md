@@ -1,83 +1,110 @@
-# Zero-Reference Deep Curve Estimation for Low-Light Image Enhancement
+<h1 align="center">Exposure Correction</h1>
+<div align="center">
+  <h4>Restore over-exposure images based on Zero-DCE</h4>
+</div>
+<p align="center">
+  <a href="#project-info">Project Info</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#key-features">Key Features</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#technical-architecture">Technical Architecture</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#prerequisites">Prerequisites</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#installation">Installation</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#usage">Usage</a>
+</p>
 
-You can find more details here: https://li-chongyi.github.io/Proj_Zero-DCE.html. Have fun!
+> [!NOTE]
+> 
+> Exposure Correction  is used to adjust the brightness of photos or images to achieve an ideal exposure level, correcting detail loss caused by overexposure (too bright) or underexposure (too dark), thereby enhancing image quality and visual effects.  
+> Our work combines the methods from three papers, modifying the network framework to achieve effective exposure correction.
 
-**The implementation of Zero-DCE is for non-commercial use only.**
+## Related Papers
+- [Zero DCE, CVPR 2020](https://github.com/Li-Chongyi/Zero-DCE)
+- [Learning Multi-Scale Photo Exposure Correction, CVPR 2021](https://github.com/mahmoudnafifi/Exposure_Correction)
+- [Reversed and Fused Zero-DCE](https://ieeexplore.ieee.org/document/10604009)
 
-We also provide a MindSpore version of our code: https://pan.baidu.com/s/1uyLBEBdbb1X4QVe2waog_g (passwords: of5l).
+## Project Info
 
-# Pytorch 
-Pytorch implementation of Zero-DCE
+> [!Tip]
+> - Based on the paper "Zero-Reference Deep Curve Estimation for Low-Light Image Enhancement"
+> - Implements both original and GAN-based approaches
+> - Supports batch processing and real-time enhancement
 
-## Requirements
-1. Python 3.7 
-2. Pytorch 1.0.0
-3. opencv
-4. torchvision 0.2.1
-5. cuda 10.0
+## Contributors
+ 
 
-Zero-DCE does not need special configurations. Just basic environment. 
+## Key Features
+- **Zero-Reference Learning**: No paired training data required
+- **Real-Time Processing**: Efficient enhancement pipeline
+- **Multiple Approaches**: 
+  - Original Zero-DCE implementation
+  - GAN-based enhancement
+  - Backward compatible version
+- **Batch Processing**: Support for processing multiple images
+- **Comparison Tools**: Built-in tools for comparing different enhancement results
 
-Or you can create a conda environment to run our code like this:
-conda create --name zerodce_env opencv pytorch==1.0.0 torchvision==0.2.1 cuda100 python=3.7 -c pytorch
+## Technical Architecture
+<div align="center">
+  <img src="./docs/pipeline.png">
+</div> 
+- **Framework**: PyTorch
+- **Key Components**:
+  - Deep Curve Estimation Network
+  - Non-reference Loss Functions
+  - Optional GAN Architecture
+- **Support for**:
+  - CPU and CUDA processing
+  - Multiple GPU training
+  - Batch processing
 
-### Folder structure
-Download the Zero-DCE_code first.
-The following shows the basic folder structure.
+## Environment
+> - NVIDIA GeForce RTX 4090
+> - Ubuntu 24.04 LTS
+> - python = 3.7
+> - pytorch = 1.13.1
+> - torchvision = 0.14.1
+> - torchaudio = 0.13.1
+> - Cuda = 11.7
+> - OpenCV
+
+## Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/ChuEating1005/Exposure-Correction
+   cd Zero-DCE
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+### Training
+```bash
+python train/lowlight_train.py
 ```
 
-├── data
-│   ├── test_data # testing data. You can make a new folder for your testing data, like LIME, MEF, and NPE.
-│   │   ├── LIME 
-│   │   └── MEF
-│   │   └── NPE
-│   └── train_data 
-├── lowlight_test.py # testing code
-├── lowlight_train.py # training code
-├── model.py # Zero-DEC network
-├── dataloader.py
-├── snapshots
-│   ├── Epoch99.pth #  A pre-trained snapshot (Epoch99.pth)
-```
-### Test: 
-
-cd Zero-DCE_code
-```
-python lowlight_test.py 
-```
-The script will process the images in the sub-folders of "test_data" folder and make a new folder "result" in the "data". You can find the enhanced images in the "result" folder.
-
-### Train: 
-1) cd Zero-DCE_code
-
-2) download the training data <a href="https://drive.google.com/file/d/1GAB3uGsmAyLgtDBDONbil08vVu5wJcG3/view?usp=sharing">google drive</a> or <a href="https://pan.baidu.com/s/11-u_FZkJ8OgbqcG6763XyA">baidu cloud [password: 1234]</a>
-
-3) unzip and put the  downloaded "train_data" folder to "data" folder
-```
-python lowlight_train.py 
-```
-##  License
-The code is made available for academic research purpose only. Under Attribution-NonCommercial 4.0 International License.
-
-
-## Bibtex
-
-```
-@inproceedings{Zero-DCE,
- author = {Guo, Chunle Guo and Li, Chongyi and Guo, Jichang and Loy, Chen Change and Hou, Junhui and Kwong, Sam and Cong, Runmin},
- title = {Zero-reference deep curve estimation for low-light image enhancement},
- booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition (CVPR)},
- pages    = {1780-1789},
- month = {June},
- year = {2020}
-}
+### Testing
+```bash
+python test/lowlight_test.py --test_dir ./data/test_data
 ```
 
-(Full paper: http://openaccess.thecvf.com/content_CVPR_2020/papers/Guo_Zero-Reference_Deep_Curve_Estimation_for_Low-Light_Image_Enhancement_CVPR_2020_paper.pdf)
+### Comparison
+```bash
+python compare.py
+```
 
-## Contact
-If you have any questions, please contact Chongyi Li at lichongyi25@gmail.com or Chunle Guo at guochunle@tju.edu.cn.
+## Project Structure
+```
+Zero-DCE/
+├── data/               # Dataset directory
+├── models/            # Model architectures
+├── train/             # Training scripts
+├── test/              # Testing scripts
+├── utils/             # Utility functions
+└── snapshots/         # Model checkpoints
+```
 
-## TensorFlow Version 
-Thanks tuvovan (vovantu.hust@gmail.com) who re-produces our code by TF. The results of TF version look similar with our Pytorch version. But I do not have enough time to check the details.
-https://github.com/tuvovan/Zero_DCE_TF
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
