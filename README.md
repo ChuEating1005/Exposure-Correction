@@ -56,7 +56,7 @@ Our pipeline consists of three main components:
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/ChuEating1005/Exposure-Correction
-   cd Zero-DCE
+   cd Exposure-Correction
    ```
 
 2. **Install dependencies:**
