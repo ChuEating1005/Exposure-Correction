@@ -6,8 +6,9 @@
   <a href="#related-works">Related Works</a>&nbsp;&nbsp;•&nbsp;
   <a href="#contributors">Contributors</a>&nbsp;&nbsp;•&nbsp;
   <a href="#pipeline">Pipeline</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#results">Results</a>&nbsp;&nbsp;•&nbsp;
   <a href="#environment">Environment</a>&nbsp;&nbsp;•&nbsp;
-  <a href="#installation">Installation</a>&nbsp;&nbsp;•&nbsp;
+  <a href="#installation">Installation</a>
 </p>
 
 > [!NOTE]
@@ -38,6 +39,19 @@ Our pipeline consists of three main components:
    - Backward reasoning: Apply inverse parameters -A
    - Add Laplacian details to enhanced result
 3. **Cascading Structure**: Output from each level serves as input to the next level
+
+## Results
+### Over-exposure
+<div align="center">
+  <img src="./docs/result1.png">
+  
+</div> 
+
+### Under-exposure
+<div align="center">
+  <img src="./docs/result2.png">
+  <img src="./docs/result3.png">
+</div> 
 
 ## Environment
 > [!CAUTION]
