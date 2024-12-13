@@ -45,6 +45,7 @@
 <div align="center">
   <img src="./docs/pipeline.png">
 </div> 
+
 - **Framework**: PyTorch
 - **Key Components**:
   - Deep Curve Estimation Network
