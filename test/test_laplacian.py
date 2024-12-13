@@ -32,7 +32,7 @@ Things to change whiie each testing
 """
 
 def test(image_path):
-	best_level = 4
+	best_level = 2
 
 	# os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 	data_lowlight = Image.open(image_path)
@@ -45,15 +45,16 @@ def test(image_path):
 	DCE_nets = []
 	optimizers = []
 	for i in range(best_level):
-		# DCE_net = model.enhance_net_nopool().cuda()  # Not parallel
-		DCE_net = torch.nn.DataParallel(model.enhance_net_nopool(), device_ids=[0, 1]).cuda()  # Parallel
-		DCE_net.load_state_dict(torch.load(f'../snapshots/laplacian/{i}_Epoch199.pth'))
+		DCE_net = model.enhance_net_nopool().cuda()  # Not parallel
+		# DCE_net = torch.nn.DataParallel(model.enhance_net_nopool(), device_ids=[0, 1]).cuda()  # Parallel
+		DCE_net.load_state_dict(torch.load(f'../snapshots/laplacian/2/{i+1}_E04_Epoch199.pth'))
 		DCE_nets.append(DCE_net)
 	
 	start = time.time()
 
 	# Not fuse
-	_, enhanced_image, _ = DCE_net(data_lowlight)
+	_, enhanced_image, _ = DCE_net(1 - data_lowlight)
+	enhanced_image = (1 - enhanced_image)
 
 	# Fuse
 	# _, enhanced_image, _ = DCE_net(1 - data_lowlight)
@@ -82,6 +83,3 @@ if __name__ == '__main__':
 			for image_path in test_list:
 				print(f'Input: {image_path}')
 				test(image_path)
-
-		
-
