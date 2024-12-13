@@ -35,21 +35,26 @@ def buildPyramid(image, levels):
 
     return gaussianPyramid, laplacianPyramid
 
-img_dir = '../data/train_data/'
-pyramidLevel = 6
+subdir = 'LIME'
+img_dir = f'../data/test_data/{subdir}/'
 
-image_list = glob.glob(img_dir + '*.jpg')
+pyramidLevel = 4
+
+image_list = glob.glob(img_dir + '*.bmp')
+
 for img_path in image_list:
     img = cv2.imread(img_path)
     gp, lp = buildPyramid(img, pyramidLevel)
 
     # Create directory if it doesn't exist
     for i in range(pyramidLevel):
-        os.makedirs(f'../data/pyramid/{i}', exist_ok=True)
+        os.makedirs(f'../data/pyramid/test/{pyramidLevel}_level/{subdir}/{pyramidLevel - i}', exist_ok=True)
 
     # Save images
     for i in range(pyramidLevel-1):
-        cv2.imwrite(f'../data/pyramid/{i}/{os.path.basename(img_path)}', lp[i])
-    cv2.imwrite(f'../data/pyramid/{pyramidLevel-1}/{os.path.basename(img_path)}', gp[pyramidLevel-1])
+        print(f'Ouput: ../data/pyramid/test/{pyramidLevel}_level/{subdir}/{i+1}/{os.path.basename(img_path)}')
+        cv2.imwrite(f'../data/pyramid/test/{pyramidLevel}_level/{subdir}/{i+1}/{os.path.basename(img_path)}', lp[i])
+    print(f'Ouput: ../data/pyramid/test/{pyramidLevel}_level/{subdir}/{0}/{os.path.basename(img_path)}')
+    cv2.imwrite(f'../data/pyramid/test/{pyramidLevel}_level/{subdir}/{0}/{os.path.basename(img_path)}', gp[pyramidLevel-1])
 
 print(f'Pyramid #{pyramidLevel} built!')
