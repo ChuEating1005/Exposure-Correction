@@ -27,10 +27,12 @@ ENV/
 zerodce_env/
 
 # Data
-data/train_data/
-data/result/*
-data/pyramid
-!data/result/comparison/
+data/
+!data/test_data/
+data/test_data/*
+!data/test_data/DICM/
+!data/test_data/LINE/
+!data/test_data/Over/
 
 # Model Checkpoints
 snapshots/*
