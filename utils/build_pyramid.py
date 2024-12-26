@@ -96,6 +96,10 @@ for img_path in image_list:
 
     # The the first level is from gaussian pyramid
     output_path_i = f'{os.path.dirname(output_path)}/{1}/{os.path.basename(img_path)}'
+
+    # Create directory recursively if it doesn't exist
+    os.makedirs(os.path.dirname(output_path_i), exist_ok=True)
+
     print(f'Ouput in {output_path_i}')
     cv2.imwrite(output_path_i, gp[0])
 
