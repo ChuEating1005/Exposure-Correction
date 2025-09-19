@@ -26,6 +26,9 @@
   <img src="https://contrib.rocks/image?repo=ChuEating1005/Exposure-Correction" />
 </a>
 
+## Project Explanation Video
+[Video](https://youtu.be/pSYP_GNpQW0?si=jB6bPspVYWFkzVNS)
+
 ## Pipeline
 <div align="center">
   <img src="./docs/pipeline.png">
