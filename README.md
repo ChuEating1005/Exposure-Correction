@@ -1,3 +1,5 @@
+
+
 <h1 align="center">Exposure Correction</h1>
 <div align="center">
   <h4>Restore over-exposure images based on Zero-DCE</h4>
@@ -83,7 +85,7 @@ Our pipeline consists of three main components:
 
 ## Project Structure
 ```
-Zero-DCE/
+Exposure-Correction/
 ├── data/               # Dataset directory
 ├── models/            # Model architectures
 ├── train/             # Training scripts
